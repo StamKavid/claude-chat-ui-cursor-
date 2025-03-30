@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude UI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@latest/dist/fonts/fonts.css">
+    <link rel="icon" href="https://claude.ai/favicon.ico" type="image/x-icon">
+    <!-- Add Prism CSS for code highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+    <!-- Add Prism JS for code highlighting -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- Add Marked for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="claude-sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-button">
+                    <svg class="plus-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>New chat</span>
+                </button>
+            </div>
+
+            <div class="conversation-list-container">
+                <div class="date-separator">
+                    <span>Today</span>
+                </div>
+
+                <ul class="conversation-list">
+                    <li class="conversation-item active" data-conversation-id="1">
+                        <div class="conversation-name">Analyzing quarterly sales data</div>
+                        <div class="conversation-time">2:45 PM</div>
+                    </li>
+                    <li class="conversation-item" data-conversation-id="2">
+                        <div class="conversation-name">Help with Python code debugging</div>
+                        <div class="conversation-time">11:30 AM</div>
+                    </li>
+                </ul>
+
+                <div class="date-separator">
+                    <span>Yesterday</span>
+                </div>
+
+                <ul class="conversation-list">
+                    <li class="conversation-item" data-conversation-id="3">
+                        <div class="conversation-name">Email draft for client meeting</div>
+                        <div class="conversation-time">Yesterday</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-section">
+                    <div class="user-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="12" fill="#E4E7EB" />
+                            <path d="M12 6a6 6 0 100 12 6 6 0 000-12z" fill="#C0C5CE" />
+                        </svg>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">SK</div>
+                        <div class="user-plan">Free Plan</div>
+                    </div>
+                    <button class="settings-button" aria-label="Settings">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 10a2 2 0 100-4 2 2 0 000 4z" fill="currentColor" />
+                            <path d="M15 8c0-.3-.2-.6-.4-.8l-1-.7c-.1-.4-.3-.8-.5-1.2l.1-1.3c0-.3-.2-.6-.5-.8C12.2 3.1 11.6 3 11 3h-.2c-.3 0-.5.1-.7.4l-.7 1c-.4.1-.8.3-1.2.5l-1.3-.1c-.3 0-.6.2-.8.5-.4.5-.6 1.1-.7 1.7v.2c0 .3.1.5.4.7l1 .7c.1.4.3.8.5 1.2l-.1 1.3c0 .3.2.6.5.8.5.4 1.1.6 1.7.7h.2c.3 0 .5-.1.7-.4l.7-1c.4-.1.8-.3 1.2-.5l1.3.1c.3 0 .6-.2.8-.5.4-.5.6-1.1.7-1.7v-.2c0-.3-.1-.5-.4-.7l-1-.7c-.1-.4-.3-.8-.5-1.2l.1-1.3z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 8h14M8 1l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <a href="#" class="anthropic-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C14.946 24 17.395 23.006 19.345 21.019C21.294 19.032 22.269 16.614 22.269 13.766C22.269 11.933 21.774 10.075 20.784 8.191C19.793 6.308 18.432 4.453 16.699 2.627C15.948 1.876 15.181 1.214 14.398 0.643C13.615 0.0719999 12.816 -0.213 12 -0.213C11.184 -0.213 10.385 0.0719999 9.602 0.643C8.819 1.214 8.052 1.876 7.301 2.627C5.568 4.453 4.207 6.308 3.216 8.191C2.226 10.075 1.731 11.933 1.731 13.766C1.731 16.614 2.706 19.032 4.655 21.019C6.605 23.006 9.054 24 12 24Z" fill="#E88B6F"/>
+                </svg>
+                Claude
+            </a>
+
+            <header class="header">
+                <div class="plan-badge">
+                    Free plan · <a href="#" class="upgrade-link">Upgrade</a>
+                </div>
+            </header>
+            
+            <h1 class="welcome-title">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C14.946 24 17.395 23.006 19.345 21.019C21.294 19.032 22.269 16.614 22.269 13.766C22.269 11.933 21.774 10.075 20.784 8.191C19.793 6.308 18.432 4.453 16.699 2.627C15.948 1.876 15.181 1.214 14.398 0.643C13.615 0.0719999 12.816 -0.213 12 -0.213C11.184 -0.213 10.385 0.0719999 9.602 0.643C8.819 1.214 8.052 1.876 7.301 2.627C5.568 4.453 4.207 6.308 3.216 8.191C2.226 10.075 1.731 11.933 1.731 13.766C1.731 16.614 2.706 19.032 4.655 21.019C6.605 23.006 9.054 24 12 24Z" fill="#E88B6F"/>
+                </svg>
+                Welcome, SK
+            </h1>
+
+            <div class="messages" id="messages">
+                <!-- Messages will be added dynamically via JavaScript -->
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="How can I help you today?"
+                        rows="1"
+                        aria-label="Chat input"
+                        class="resize-none focus:outline-none"
+                    ></textarea>
+                    
+                    <div class="input-footer">
+                        <div class="model-selector">
+                            <button class="model-button">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M8 1.33334L10.06 5.50668L14.6667 6.18001L11.3333 9.42668L12.12 14.0667L8 11.8467L3.88 14.0667L4.66667 9.42668L1.33333 6.18001L5.94 5.50668L8 1.33334Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Claude 3 Sonnet</span>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="input-actions">
+                            <button class="action-button" aria-label="Attach files">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M17.5 10H2.5M2.5 10L7.5 5M2.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button class="send-button" id="sendButton" aria-label="Send message">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M2.5 10H17.5M17.5 10L12.5 5M17.5 10L12.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
